@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "rn-elements-rn-query",
+    "slug": "rn-elements-rn-query",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
