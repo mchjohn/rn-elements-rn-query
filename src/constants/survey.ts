@@ -1,10 +1,13 @@
 export interface ISurvey {
   id: string;
-  owner: string;
+  op1: boolean;
+  op2: boolean;
   title: string;
-  VoteYes: boolean;
-  VoteNot: boolean;
-  amountYes: number;
-  amountNot: number;
+  owner: string;
+  ownerId: string;
+  op1Title: string;
+  op2Title: string;
+  amountOp1: number;
+  amountOp2: number;
   amountVotes: number;
 }

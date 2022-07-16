@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import auth from '@react-native-firebase/auth';
 import { Dialog, Input, Button } from "@rneui/themed";
 import firestore from '@react-native-firebase/firestore';
 
@@ -8,12 +9,14 @@ type Props = {
 }
 
 export function AddSurvey({ isVisible, closeModal }: Props) {
-  const [owner, setOwner] = useState('');
   const [survey, setSurvey] = useState('');
+  const [op1Title, setOp1Title] = useState('');
+  const [op2Title, setOp2Title] = useState('');
   
   let minCharacters = 0;
-  let maxCharacters = 500;
+  let maxCharacters = 300;
 
+  // Contador de caracteres digitados
   const characters = useMemo(() => {
     return `${minCharacters += survey.length}/${maxCharacters -= survey.length}`
   }, [survey]);
@@ -23,56 +26,82 @@ export function AddSurvey({ isVisible, closeModal }: Props) {
     closeModal();
   }
 
+  /*
+    Verifica se o usuário tem um name, caso tenha retorna-o
+    caso não tenha, retorna uma parte do email
+  */ 
+  const renderName = () => {
+    const displayName = auth().currentUser?.displayName;
+    const email = auth().currentUser?.email;
+
+    const formattedEmail = `${email?.slice(0, email?.indexOf('@'))}`;
+    return displayName ? displayName : formattedEmail;
+  }
+
+  // Cadastra uma pergunta
   const onAddSurvey = async () => {
-    // Envia o survey;
     try {
       firestore().collection('Surveys').add(
         {
-          owner: owner,
+          op1: false,
+          op2: false,
+          amountOp1: 0,
+          amountOp2: 0,
           title: survey,
-          amountYes: 0,
-          amountNot: 0,
           amountVotes: 0,
-          voteYes: false,
-          voteNot: false,
+          op1Title: op1Title,
+          op2Title: op2Title,
+          owner: renderName(),
+          ownerId: auth().currentUser?.uid,
           createdAt: firestore.FieldValue.serverTimestamp(),
         }
       );
 
-      console.log('Adicionado com sucesso');
+      console.log('Pergunta adicionada com sucesso');
 
       resetForm();
     } catch (error) {
       console.log(error);
     }
-
   }
 
   return (
     <Dialog
       isVisible={isVisible}
       onBackdropPress={resetForm}
+      overlayStyle={{ width: '90%' }}
     >
       <Dialog.Title title="Pergunte o que quiser aqui."/>
 
       <Input
-        label='Seu nome *'
-        placeholder='Ex: John'
-        onChangeText={setOwner}
+        multiline
+        maxLength={300}
+        onChangeText={setSurvey}
+        errorMessage={characters}
+        label='Faça sua pergunta *'
+        placeholder='Ex: Vasco ou Flamengo?'
+        errorStyle={{ color: '#4F4F4F', marginBottom: 22 }}
       />
 
       <Input
         multiline
-        label='Faça sua pergunta *'
-        errorStyle={{ color: '#4F4F4F' }}
-        placeholder='Ex: Vasco ou Flamengo?'
-        errorMessage={characters}
-        onChangeText={setSurvey}
+        maxLength={100}
+        label='Opção 1 *'
+        placeholder='Ex: Vasco? *'
+        onChangeText={setOp1Title}
+      />
+
+      <Input
+        multiline
+        maxLength={100}
+        label='Opção 2 *'
+        placeholder='Ex: Flamengo? *'
+        onChangeText={setOp2Title}
       />
 
       <Button
         title='Adicionar Pergunta'
-        disabled={survey.length < 10 || !owner}
+        disabled={survey.length < 10 || !op1Title || !op2Title}
         onPress={onAddSurvey}
         containerStyle={{
           marginTop: 16,

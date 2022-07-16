@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { FlatList } from "react-native";
 
 import { ISurvey } from "src/constants/survey";
@@ -9,12 +9,7 @@ type Props = {
 }
 
 export function SurveyList({ surveys }: Props) {
-  const [yes, setYes] = useState(false);
-  const [not, setNot] = useState(false);
-
   const keyExtractor = (item: ISurvey) => item.id
-
-  console.log('Sim: ', yes, 'Não: ', not);
 
   return (
     <FlatList
@@ -23,8 +18,6 @@ export function SurveyList({ surveys }: Props) {
       renderItem={({ item }) =>
         <SurveyItem
           survey={item}
-          setYes={setYes}
-          setNot={setNot}
         />
       }
       contentContainerStyle={{ paddingTop: 8, paddingBottom: 16 }}

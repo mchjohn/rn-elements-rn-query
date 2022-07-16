@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { Home } from './src/screens/Home/index';
+import { Navigation } from './src/routes';
 
 export default function App() {
   return (
-    <Home />
+    <Navigation />
   );
 }

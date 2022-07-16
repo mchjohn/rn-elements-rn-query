@@ -1,26 +1,38 @@
-import React, { useState } from "react";
-import { FlatList, StyleSheet } from "react-native";
+import React from "react";
+import { StyleSheet } from "react-native";
 import { ListItem, CheckBox } from '@rneui/themed';
+import firestore from '@react-native-firebase/firestore';
 
 import { ISurvey } from "src/constants/survey";
 
 type Props = {
   survey: ISurvey;
-  setYes: (checked: boolean) => void;
-  setNot: (checked: boolean) => void;
 }
 
-export function SurveyItem({ survey, setYes, setNot }: Props) {
-  const [checked1, setChecked1] = useState(false);
-  const [checked2, setChecked2] = useState(false);
+export function SurveyItem({ survey }: Props) {
+  // Computa o voto
+  const onVote = (vote: 'op1' | 'op2') => {
+    let updatedData = {};
+    
+    if (vote === 'op1') {
+      updatedData = {
+        op1: true,
+        amountOp1: survey.amountOp1 + 1,
+        amountVotes: survey.amountVotes + 1,
+      }
+    } else {
+      updatedData = {
+        op2: true,
+        amountOp2: survey.amountOp2 + 1,
+        amountVotes: survey.amountVotes + 1,
+      }
+    }
 
-  const onChangeYes = () => {
-    setYes(true);
-    setChecked1(true);
-  }
-  const onChangeNot = () => {
-    setNot(true);
-    setChecked2(true);
+    // Atualiza a collection no firestore
+    firestore()
+      .collection('Surveys')
+      .doc(survey.id)
+      .update(updatedData)
   }
 
   return (
@@ -30,22 +42,27 @@ export function SurveyItem({ survey, setYes, setNot }: Props) {
           {survey.title}
         </ListItem.Title>
         <ListItem.Subtitle>De: {survey.owner}</ListItem.Subtitle>
+        <ListItem.Subtitle>
+          Opção 1: {survey.amountOp1} votos
+          / Opção 2: {survey.amountOp2} votos
+          / Total: {survey.amountVotes} votos
+        </ListItem.Subtitle>
 
         <CheckBox
           center
-          title="Sim"
-          checked={checked1}
-          disabled={checked1 || checked2}
-          onPress={onChangeYes}
+          title={survey.op1Title}
+          onPress={() => onVote("op1")}
+          checked={survey.op1}
+          disabled={survey.op1 || survey.op2}
           wrapperStyle={{ marginBottom: -20 }}
         />
 
         <CheckBox
           center
-          title="Não"
-          checked={checked2}
-          disabled={checked2 || checked1}
-          onPress={onChangeNot}
+          title={survey.op2Title}
+          onPress={() => onVote('op2')}
+          checked={survey.op2}
+          disabled={survey.op2 || survey.op1}
         />
       </ListItem.Content>
       <ListItem.Chevron />
