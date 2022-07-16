@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import { View, Text } from "react-native";
-import { Input, Icon, Button } from "@rneui/themed";
 import auth from '@react-native-firebase/auth';
+import { Input, Icon, Button } from "@rneui/themed";
+import firestore from '@react-native-firebase/firestore';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+
+GoogleSignin.configure({
+  webClientId: '437824743672-g9bq2idg5hki0sibdu01jhfl2l0ariei.apps.googleusercontent.com',
+})
 
 import { ButtonSign } from '../../components/ButtonSign';
 import { ButtonNavigation } from '../../components/ButtonNavigation';
@@ -23,6 +29,48 @@ export function SignIn() {
       }
     }
   }
+
+  const handleSigninWithGoogle = async () => {
+    try {
+      // Get the users ID token
+      const { idToken } = await GoogleSignin.signIn();
+    
+      // Create a Google credential with the token
+      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+    
+      // Sign-in the user with the credential
+      const { user } = await auth().signInWithCredential(googleCredential);
+      
+      onAddUser(user.uid, user.displayName, user.email, user.photoURL);
+      console.log(user);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+    // Cadastra o usuário no firestore
+    const onAddUser = async (uid: string, name: string | null, email: string | null, photoURL: string | null) => {
+      try {
+        // Verifica se o usuário já está cadastrado no firestore
+        const { exists } = await firestore().collection('Users').doc(uid).get();
+
+        if (exists) return;
+
+        await firestore().collection('Users').doc(uid).set(
+          {
+            name,
+            email,
+            photoURL,
+            createdAt: firestore.FieldValue.serverTimestamp(),
+          },
+          { merge: true }
+        );
+  
+        console.log('Usuário cadastrado com sucesso');
+      } catch (error) {
+        console.log(error);
+      }
+    }
 
   return (
     <KeyboardAvoidingViewWrapper>
@@ -94,26 +142,30 @@ export function SignIn() {
           }}
           containerStyle={{
             width: '100%',
+            marginBottom: 16,
           }}
+          onPress={handleSigninWithGoogle}
         />
-
-        <Button
-          size="lg"
-          title="Entrar com FaceBook"
-          icon={{
-            name: 'facebook',
-            type: 'font-awesome',
-            color: '#FFFAFA',
-          }}
-          iconContainerStyle={{ marginRight: 10 }}
-          buttonStyle={{
-            backgroundColor: '#4267B2',
-          }}
-          containerStyle={{
-            width: '100%',
-            marginVertical: 16,
-          }}
-        />
+      
+        {/*
+          <Button
+            size="lg"
+            title="Entrar com FaceBook"
+            icon={{
+              name: 'facebook',
+              type: 'font-awesome',
+              color: '#FFFAFA',
+            }}
+            iconContainerStyle={{ marginRight: 10 }}
+            buttonStyle={{
+              backgroundColor: '#4267B2',
+            }}
+            containerStyle={{
+              width: '100%',
+              marginVertical: 16,
+            }}
+          />
+        */}
 
         <ButtonNavigation type="signin" />
 
