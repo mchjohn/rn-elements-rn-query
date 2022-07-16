@@ -1,28 +1,12 @@
 import React from "react";
 import { Avatar, Icon } from "@rneui/themed";
 import { Text, View, StyleSheet } from "react-native";
-import auth from '@react-native-firebase/auth';
+import { useAuth } from "../../contexts/AuthContext";
+
+import { renderName, renderAvatar } from '../../utils/userInfoHeader';
 
 export function Header() {
-    const handleLogout = () => {
-    auth().signOut();
-  }
-
-  const renderName = () => {
-    const displayName = auth().currentUser?.displayName;
-    const email = auth().currentUser?.email;
-
-    const formattedEmail = `${email?.slice(0, 10)}...`;
-
-    return displayName ? displayName : formattedEmail;
-  }
-
-  const renderAvatar = () => {
-    const avatar = auth().currentUser?.photoURL;
-    const email = auth().currentUser?.email;
-
-    return avatar ? avatar : `https://avatars.dicebear.com/api/bottts/${email}.png`;
-  }
+  const { signOut } = useAuth();
 
   return (
     <View style={styles.header}>
@@ -39,7 +23,7 @@ export function Header() {
       </View>
       
       <Icon
-      onPress={handleLogout}
+      onPress={signOut}
         name='logout'
         color='#999999'
       />
