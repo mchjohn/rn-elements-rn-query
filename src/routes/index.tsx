@@ -1,30 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
-
-import { IUser } from '../constants/user';
 
 import { PublicNavigation } from './public.routes';
 import { PrivateNavigation } from './private.routes';
 
+import { useAuth } from '../contexts/AuthContext';
 
 export function Navigation() {
-  const [user, setUser] = useState<IUser | null | FirebaseAuthTypes.User>(null);
-
-  useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(user => {
-      setUser(user);
-    });
-
-    return subscriber;
-  }, []);
-
+  const { user } = useAuth();
+  
   function getNavigation() {
-    if (!user) {
+    if (!user.uid) {
       return <PublicNavigation />;
     }
     return <PrivateNavigation />;
   }
 
-  return <NavigationContainer>{getNavigation()}</NavigationContainer>;
+  return (
+    <NavigationContainer>
+      {getNavigation()}
+    </NavigationContainer>
+  );
 }
