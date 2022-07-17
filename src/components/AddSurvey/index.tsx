@@ -3,6 +3,9 @@ import auth from '@react-native-firebase/auth';
 import { Dialog, Input, Button } from "@rneui/themed";
 import firestore from '@react-native-firebase/firestore';
 
+import { useToast } from '../../hooks/useToast';
+import { renderName } from '../../utils/userInfoHeader';
+
 type Props = {
   isVisible: boolean;
   closeModal: () => void;
@@ -12,6 +15,8 @@ export function AddSurvey({ isVisible, closeModal }: Props) {
   const [survey, setSurvey] = useState('');
   const [op1Title, setOp1Title] = useState('');
   const [op2Title, setOp2Title] = useState('');
+
+  const { showToast } = useToast();
   
   let minCharacters = 0;
   let maxCharacters = 300;
@@ -24,18 +29,6 @@ export function AddSurvey({ isVisible, closeModal }: Props) {
   const resetForm = () => {
     setSurvey('');
     closeModal();
-  }
-
-  /*
-    Verifica se o usuário tem um name, caso tenha retorna-o
-    caso não tenha, retorna uma parte do email
-  */ 
-  const renderName = () => {
-    const displayName = auth().currentUser?.displayName;
-    const email = auth().currentUser?.email;
-
-    const formattedEmail = `${email?.slice(0, email?.indexOf('@'))}`;
-    return displayName ? displayName : formattedEmail;
   }
 
   // Cadastra uma pergunta
@@ -57,11 +50,11 @@ export function AddSurvey({ isVisible, closeModal }: Props) {
         }
       );
 
-      console.log('Pergunta adicionada com sucesso');
+      showToast('success', 'Pergunta adicionada com sucesso 👍');
 
       resetForm();
     } catch (error) {
-      console.log(error);
+      showToast('error', 'Ops... Algo deu errado, tente novamente');
     }
   }
 
@@ -101,7 +94,7 @@ export function AddSurvey({ isVisible, closeModal }: Props) {
 
       <Button
         title='Adicionar Pergunta'
-        disabled={survey.length < 10 || !op1Title || !op2Title}
+        disabled={survey.length < 2 || !op1Title || !op2Title}
         onPress={onAddSurvey}
         containerStyle={{
           marginTop: 16,
