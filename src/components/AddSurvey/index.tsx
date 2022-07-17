@@ -4,6 +4,7 @@ import { Dialog, Input, Button } from "@rneui/themed";
 import firestore from '@react-native-firebase/firestore';
 
 import { useToast } from '../../hooks/useToast';
+import { renderName } from '../../utils/userInfoHeader';
 
 type Props = {
   isVisible: boolean;
@@ -28,18 +29,6 @@ export function AddSurvey({ isVisible, closeModal }: Props) {
   const resetForm = () => {
     setSurvey('');
     closeModal();
-  }
-
-  /*
-    Verifica se o usuário tem um name, caso tenha retorna-o
-    caso não tenha, retorna uma parte do email
-  */ 
-  const renderName = () => {
-    const displayName = auth().currentUser?.displayName;
-    const email = auth().currentUser?.email;
-
-    const formattedEmail = `${email?.slice(0, email?.indexOf('@'))}`;
-    return displayName ? displayName : formattedEmail;
   }
 
   // Cadastra uma pergunta
