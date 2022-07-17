@@ -1,6 +1,8 @@
 import React from "react";
 import { Text, Pressable, StyleSheet } from "react-native";
 
+import { colors } from '../../styles';
+
 export function FloatButton({ ...rest }) {
   return (
     <Pressable
@@ -26,12 +28,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#00BFFF',
+    backgroundColor: colors.blue,
   },
   label: {
     fontSize: 42,
     lineHeight: 50,
     fontWeight: "600",
-    color: '#FFFAFA',
+    color: colors.white,
   }
 })

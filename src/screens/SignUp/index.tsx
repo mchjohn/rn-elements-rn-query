@@ -1,13 +1,17 @@
 import React, { useState } from "react";
-import { View, Text } from "react-native";
-import { Input, Icon } from "@rneui/themed";
 import auth from '@react-native-firebase/auth';
+import { View, StyleSheet } from "react-native";
 
 import { saveUserInFirestore } from "../../utils/saveUserInFirestore";
 
+import { SmallText } from '../../components/SmallText';
 import { ButtonSign } from '../../components/ButtonSign';
+import { InputEmail } from '../../components/InputEmail';
 import { ButtonNavigation } from '../../components/ButtonNavigation';
 import { KeyboardAvoidingViewWrapper } from "../../components/KeyboardAvoidingViewWrapper";
+
+import { colors } from '../../styles';
+import { InputPassword } from '../../components/InputPassword/index';
 
 export function SignUp() {
   const [email, setEmail] = useState('');
@@ -38,40 +42,9 @@ export function SignUp() {
 
   return (
     <KeyboardAvoidingViewWrapper>
-    <View style={{
-      flex: 1,
-      padding: 16,
-      alignItems: 'center',
-      justifyContent: 'center',
-    }}>
-      <Input
-        label='Digite seu e-mail'
-        placeholder='exemplo@exemplo.com'
-        keyboardType="email-address"
-        onChangeText={setEmail}
-        leftIcon={
-          <Icon
-            size={24}
-            name='email'
-            color='#4F4F4F'
-          />
-        }
-      />
-      <Input
-        label='Digite sua senha'
-        placeholder="Password"
-        secureTextEntry={true}
-        onChangeText={setPassword}
-        errorMessage={errorMessage}
-        errorStyle={{ color: '#FF4500'}}
-        leftIcon={
-          <Icon
-            size={24}
-            name='lock'
-            color='#4F4F4F'
-          />
-        }
-      />
+    <View style={styles.container}>
+      <InputEmail onChangeText={setEmail} />
+      <InputPassword onChangeText={setPassword} errorMessage={errorMessage} />
 
       <ButtonSign
         type="signup"
@@ -79,19 +52,20 @@ export function SignUp() {
         onPress={handleCreateUserAccount}
       />
 
-      <Text
-        style={{
-          fontSize: 14,
-          color: '#4F4F4F',
-          fontWeight: '600',
-          marginVertical: 8,
-        }}
-      >
-        ou
-      </Text>
+      <SmallText text="ou" />
 
       <ButtonNavigation type="signup" />
     </View>
     </KeyboardAvoidingViewWrapper>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.white,
+  }
+});

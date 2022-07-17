@@ -1,12 +1,17 @@
 import React, { useState } from "react";
-import { View, Text } from "react-native";
-import { Input, Icon, Button } from "@rneui/themed";
+import { View, StyleSheet } from "react-native";
 
 import { useAuth } from "../../contexts/AuthContext";
 
+import { SmallText } from '../../components/SmallText';
 import { ButtonSign } from '../../components/ButtonSign';
+import { InputEmail } from '../../components/InputEmail';
+import { SocialButton } from '../../components/SocialButton';
+import { InputPassword } from '../../components/InputPassword';
 import { ButtonNavigation } from '../../components/ButtonNavigation';
 import { KeyboardAvoidingViewWrapper } from '../../components/KeyboardAvoidingViewWrapper';
+
+import { colors, fontSize } from "../../styles";
 
 export function SignIn() {
   const { signInWithEmail, signInWithGoogle, errorMessage } = useAuth();
@@ -16,42 +21,9 @@ export function SignIn() {
 
   return (
     <KeyboardAvoidingViewWrapper>
-      <View
-        style={{
-          flex: 1,
-          padding: 16,
-          alignItems: 'center',
-          justifyContent: 'flex-end',
-        }}
-      >
-        <Input
-          label='Digite seu e-mail'
-          placeholder='exemplo@exemplo.com'
-          keyboardType="email-address"
-          onChangeText={setEmail}
-          leftIcon={
-            <Icon
-              size={24}
-              name='email'
-              color='#4F4F4F'
-            />
-          }
-        />
-        <Input
-          label='Digite sua senha'
-          placeholder="Sua senha"
-          secureTextEntry={true}
-          onChangeText={setPassword}
-          errorMessage={errorMessage}
-          errorStyle={{ color: '#FF4500'}}
-          leftIcon={
-            <Icon
-              size={24}
-              name='lock'
-              color='#4F4F4F'
-            />
-          }
-        />
+      <View style={styles.container}>
+        <InputEmail onChangeText={setEmail} />
+        <InputPassword onChangeText={setPassword} errorMessage={errorMessage} />
 
         <ButtonSign
           type="signin"
@@ -59,59 +31,28 @@ export function SignIn() {
           onPress={() => signInWithEmail(email, password)}
         />
 
-        <Text
-          style={{
-            fontSize: 14,
-            color: '#4F4F4F',
-            fontWeight: '600',
-            marginVertical: 8,
-          }}
-        >
-          ou
-        </Text>
+        <SmallText text="ou" />
 
-        <Button
-          size="lg"
-          title="Entrar com Google"
-          icon={{
-            name: 'google',
-            type: 'font-awesome',
-            color: '#FFFAFA',
-          }}
-          iconContainerStyle={{ marginRight: 10 }}
-          buttonStyle={{
-            backgroundColor: '#4285F4',
-          }}
-          containerStyle={{
-            width: '100%',
-            marginBottom: 16,
-          }}
-          onPress={signInWithGoogle}
-        />
-      
-        {/*
-          <Button
-            size="lg"
-            title="Entrar com FaceBook"
-            icon={{
-              name: 'facebook',
-              type: 'font-awesome',
-              color: '#FFFAFA',
-            }}
-            iconContainerStyle={{ marginRight: 10 }}
-            buttonStyle={{
-              backgroundColor: '#4267B2',
-            }}
-            containerStyle={{
-              width: '100%',
-              marginVertical: 16,
-            }}
-          />
-        */}
+        <SocialButton onPress={signInWithGoogle} />
 
         <ButtonNavigation type="signin" />
-
       </View>
     </KeyboardAvoidingViewWrapper>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    backgroundColor: colors.white,
+  },
+  text: {
+    fontWeight: '600',
+    marginVertical: 8,
+    color: colors.gray300,
+    fontSize: fontSize.small,
+  },
+});

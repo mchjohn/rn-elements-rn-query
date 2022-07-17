@@ -1,6 +1,8 @@
 import React from "react";
 import { Button } from "@rneui/themed";
 
+import { colors } from "../../styles";
+
 type Props = {
   type: 'signin' | 'signup';
   disabled: boolean;
@@ -19,6 +21,7 @@ export function ButtonSign({ type, disabled, onPress }: Props) {
         width: '100%',
         marginTop: 8,
       }}
+      buttonStyle={{ backgroundColor: colors.blue }}
     />
-  )
+  );
 }
