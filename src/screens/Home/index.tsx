@@ -31,8 +31,8 @@ export function Home() {
 
       setSurveys(data);
     });
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.log(err);
     }
     // Function de limpeza
     // para deixar de ouvir as alterações com querySnapshot

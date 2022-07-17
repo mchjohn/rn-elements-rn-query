@@ -6,11 +6,12 @@ import React,
   useState,
   useEffect,
 } from 'react';
-import firestore from '@react-native-firebase/firestore';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 import { IUser } from '../constants/user';
+import { useToast } from '../hooks/useToast';
+import { saveUserInFirestore } from '../utils/saveUserInFirestore';
 
 type AuthProviderProps = {
   children: ReactNode;
@@ -27,8 +28,6 @@ type IAuthContextData = {
   signInWithEmail(email: string, password: string): Promise<void>;
 }
 
-type User = Pick<IUser, 'uid' | 'displayName' | 'email' | 'photoURL'>
-
 const { WEB_CLIENT_Id } = process.env;
 
 GoogleSignin.configure({
@@ -38,6 +37,8 @@ GoogleSignin.configure({
 const AuthContext = createContext({} as IAuthContextData);
 
 function AuthProvider({ children }: AuthProviderProps) {
+  const { showToast } = useToast();
+
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [user, setUser] = useState<IUser>({} as IUser);
@@ -71,43 +72,16 @@ function AuthProvider({ children }: AuthProviderProps) {
       // Sign-in the user with the credential
       const { user } = await auth().signInWithCredential(googleCredential);
 
-      const data: User = {
+      saveUserInFirestore({
         uid: user.uid,
         displayName: user.displayName,
         email: user.email!,
         photoURL: user.photoURL,
-      }
-      
-      saveUserInFirestore(data);
-      // console.log(user);
+      });
     } catch (error) {
-      console.log(error);
+      showToast('error', 'Ops... Algo deu errado, tente novamente');
     } finally {
       setIsLoading(false);
-    }
-  }
-
-  // Cadastra o usuário no firestore
-  const saveUserInFirestore = async (user: User) => {
-    try {
-      // Verifica se o usuário já está cadastrado no firestore
-      const { exists } = await firestore().collection('Users').doc(user.uid).get();
-
-      if (exists) return;
-
-      await firestore().collection('Users')
-        .doc(user.uid).set({
-          name: user.displayName,
-          email: user.email,
-          photoURL: user.photoURL,
-          createdAt: firestore.FieldValue.serverTimestamp(),
-        },
-        { merge: true }
-      );
-
-      console.log('Usuário cadastrado com sucesso');
-    } catch (error) {
-      console.log(error);
     }
   }
 

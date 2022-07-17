@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { View, Text } from "react-native";
 import { Input, Icon } from "@rneui/themed";
 import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
+
+import { saveUserInFirestore } from "../../utils/saveUserInFirestore";
 
 import { ButtonSign } from '../../components/ButtonSign';
 import { ButtonNavigation } from '../../components/ButtonNavigation';
@@ -13,31 +14,17 @@ export function SignUp() {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  // Cadastra o usuário no firestore
-  const onAddUser = async (uid: string, name: string | null, email: string | null, photoURL: string | null) => {
-    try {
-      await firestore().collection('Users').doc(uid).set(
-        {
-          name,
-          email,
-          photoURL,
-          createdAt: firestore.FieldValue.serverTimestamp(),
-        },
-        { merge: true }
-      );
-
-      console.log('Usuário cadastrado com sucesso');
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  // Cria uma conta com email e senha
+  // Cria conta com email e senha
   const handleCreateUserAccount = async () => {
     try {
       const { user } = await auth().createUserWithEmailAndPassword(email, password);
 
-      onAddUser(user.uid, user.displayName, user.email, user.photoURL);
+      saveUserInFirestore({
+          uid: user.uid,
+          displayName: user.displayName,
+          email: user.email!,
+          photoURL: user.photoURL,
+      });
     } catch (err: any) {
       if (err.code === 'auth/email-already-in-use') {
         setErrorMessage('Esse e-mail já está em uso');
