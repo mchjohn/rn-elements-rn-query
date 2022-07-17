@@ -3,7 +3,9 @@ import { StyleSheet } from "react-native";
 import { ListItem, CheckBox } from '@rneui/themed';
 import firestore from '@react-native-firebase/firestore';
 
-import { ISurvey } from "src/constants/survey";
+import { ISurvey } from "../../../constants/survey";
+
+import { colors, fontSize } from "../../../styles";
 
 type Props = {
   survey: ISurvey;
@@ -36,7 +38,7 @@ export function SurveyItem({ survey }: Props) {
   }
 
   return (
-    <ListItem bottomDivider containerStyle={{ padding: 4 }}>
+    <ListItem bottomDivider containerStyle={{ paddingTop: 8, paddingBottom: 0, paddingHorizontal: 0 }}>
       <ListItem.Content>
         <ListItem.Title style={styles.text}>
           {survey.title}
@@ -72,7 +74,8 @@ export function SurveyItem({ survey }: Props) {
 
 const styles = StyleSheet.create({
   text: {
-    fontSize: 18,
     fontWeight: '700',
+    color: colors.black,
+    fontSize: fontSize.large,
   }
 })

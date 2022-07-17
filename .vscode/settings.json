@@ -3,6 +3,7 @@
     "firestore",
     "Pressable",
     "rneui",
+    "signin",
     "Signin"
   ]
 }
