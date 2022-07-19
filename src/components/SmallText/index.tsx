@@ -5,7 +5,7 @@ import { colors } from '../../styles';
 
 type Props = {
   text: string;
-}
+};
 
 export function SmallText({ text }: Props) {
   return (

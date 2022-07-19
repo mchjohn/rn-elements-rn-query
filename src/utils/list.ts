@@ -63,6 +63,6 @@ const list: SurveyProps[] = [
     op_yes: 'Sim',
     op_no: 'Não',
   },
-]
+];
 
-export { list }
+export { list };

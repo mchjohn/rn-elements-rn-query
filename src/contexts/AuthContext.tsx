@@ -1,11 +1,4 @@
-import React,
-{
-  createContext,
-  ReactNode,
-  useContext,
-  useState,
-  useEffect,
-} from 'react';
+import React, { createContext, ReactNode, useContext, useState, useEffect } from 'react';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
@@ -15,7 +8,7 @@ import { saveUserInFirestore } from '../utils/saveUserInFirestore';
 
 type AuthProviderProps = {
   children: ReactNode;
-}
+};
 
 type IAuthContextData = {
   user: IUser;
@@ -26,7 +19,7 @@ type IAuthContextData = {
   signOut(): void;
   signInWithGoogle(): Promise<void>;
   signInWithEmail(email: string, password: string): Promise<void>;
-}
+};
 
 const { WEB_CLIENT_Id } = process.env;
 
@@ -57,7 +50,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   const signInWithGoogle = async () => {
     setIsLoading(true);
@@ -65,10 +58,10 @@ function AuthProvider({ children }: AuthProviderProps) {
     try {
       // Get the users ID token
       const { idToken } = await GoogleSignin.signIn();
-    
+
       // Create a Google credential with the token
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-    
+
       // Sign-in the user with the credential
       const { user } = await auth().signInWithCredential(googleCredential);
 
@@ -83,23 +76,23 @@ function AuthProvider({ children }: AuthProviderProps) {
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   const signOut = () => {
     auth().signOut();
-  }
+  };
 
   const currentUser = auth().currentUser;
 
   useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(user => {
+    const subscriber = auth().onAuthStateChanged((user) => {
       if (user) {
         const userInfo = {
           uid: user.uid,
           email: user.email!,
           displayName: user.displayName,
           photoURL: user.photoURL,
-        }
+        };
 
         setUser(userInfo);
       } else {

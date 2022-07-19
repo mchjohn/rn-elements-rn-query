@@ -1,19 +1,19 @@
-import React from "react";
-import { Button } from "@rneui/themed";
+import React from 'react';
+import { Button } from '@rneui/themed';
 
-import { colors } from "../../styles";
+import { colors } from '../../styles';
 
 type Props = {
   type: 'signin' | 'signup';
   disabled: boolean;
   onPress: () => void;
-}
+};
 
 export function ButtonSign({ type, disabled, onPress }: Props) {
   return (
     <Button
-      size='lg'
-      color='primary'
+      size="lg"
+      color="primary"
       onPress={onPress}
       disabled={disabled}
       title={type === 'signin' ? 'Entrar' : 'Criar conta'}

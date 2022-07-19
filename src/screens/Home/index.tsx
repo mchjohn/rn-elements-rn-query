@@ -10,6 +10,8 @@ import { AddSurvey } from '../../components/AddSurvey';
 import { SkeletonView } from '../../components/Skeleton';
 import { FloatButton } from '../../components/FloatButton';
 
+import { colors } from '../../styles';
+
 export function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
@@ -17,23 +19,24 @@ export function Home() {
 
   // Busca as perguntas no firestore
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     let subscribe = () => {};
 
     try {
       subscribe = firestore()
-      .collection('Surveys')
-      .onSnapshot(querySnapshot => {
-        const data = querySnapshot.docs.map(doc => {
-        return {
-          // Devido o ID não estar no mesmo nível dos dados
-          // faz um spread para espalhar os dadas no mesmo nível do ID
-          id: doc.id,
-          ...doc.data(),
-        }
-      }) as ISurvey[];
+        .collection('Surveys')
+        .onSnapshot((querySnapshot) => {
+          const data = querySnapshot.docs.map((doc) => {
+            return {
+              // Devido o ID não estar no mesmo nível dos dados
+              // faz um spread para espalhar os dadas no mesmo nível do ID
+              id: doc.id,
+              ...doc.data(),
+            };
+          }) as ISurvey[];
 
-      setSurveys(data);
-    });
+          setSurveys(data);
+        });
     } catch (err) {
       console.log(err);
     } finally {
@@ -48,24 +51,23 @@ export function Home() {
   return !isLoading ? (
     <View style={styles.header}>
       <Header />
-  
+
       <SurveyList surveys={surveys} />
 
       <FloatButton onPress={() => setModalVisible(true)} />
 
-      <AddSurvey
-        isVisible={modalVisible}
-        closeModal={() => setModalVisible(false)}
-      />
+      <AddSurvey isVisible={modalVisible} closeModal={() => setModalVisible(false)} />
     </View>
-  ) : <SkeletonView />
+  ) : (
+    <SkeletonView />
+  );
 }
 
 const styles = StyleSheet.create({
   header: {
+    backgroundColor: colors.white,
     flex: 1,
-    paddingTop: 32,
     paddingHorizontal: 16,
-    backgroundColor: '#FFFAFA',
+    paddingTop: 32,
   },
-})
+});

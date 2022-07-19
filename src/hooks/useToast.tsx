@@ -1,11 +1,5 @@
 import React from 'react';
-import
-  Toast,
-  {
-    BaseToast,
-    ErrorToast,
-    BaseToastProps
-  } from 'react-native-toast-message';
+import Toast, { BaseToast, ErrorToast, BaseToastProps } from 'react-native-toast-message';
 
 type ToastProps = 'success' | 'error';
 

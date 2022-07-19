@@ -1,11 +1,11 @@
-import React from "react";
-import { Button } from "@rneui/themed";
+import React from 'react';
+import { Button } from '@rneui/themed';
 
-import { colors } from "../../styles";
+import { colors } from '../../styles';
 
 type Props = {
   onPress: () => void;
-}
+};
 
 export function SocialButton({ onPress }: Props) {
   return (
@@ -18,6 +18,7 @@ export function SocialButton({ onPress }: Props) {
         color: colors.white,
       }}
       iconContainerStyle={{ marginRight: 10 }}
+      // eslint-disable-next-line react-native/no-color-literals
       buttonStyle={{
         backgroundColor: '#4285F4',
       }}

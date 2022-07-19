@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import auth from '@react-native-firebase/auth';
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet } from 'react-native';
 
-import { saveUserInFirestore } from "../../utils/saveUserInFirestore";
+import { saveUserInFirestore } from '../../utils/saveUserInFirestore';
 
 import { SmallText } from '../../components/SmallText';
 import { ButtonSign } from '../../components/ButtonSign';
 import { InputEmail } from '../../components/InputEmail';
 import { ButtonNavigation } from '../../components/ButtonNavigation';
-import { KeyboardAvoidingViewWrapper } from "../../components/KeyboardAvoidingViewWrapper";
+import { KeyboardAvoidingViewWrapper } from '../../components/KeyboardAvoidingViewWrapper';
 
 import { colors } from '../../styles';
 import { InputPassword } from '../../components/InputPassword/index';
@@ -24,12 +24,12 @@ export function SignUp() {
       const { user } = await auth().createUserWithEmailAndPassword(email, password);
 
       saveUserInFirestore({
-          uid: user.uid,
-          displayName: user.displayName,
-          email: user.email!,
-          photoURL: user.photoURL,
+        uid: user.uid,
+        displayName: user.displayName,
+        email: user.email!,
+        photoURL: user.photoURL,
       });
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line
       if (err.code === 'auth/email-already-in-use') {
         setErrorMessage('Esse e-mail já está em uso');
       } else if (err.code === 'auth/weak-password') {
@@ -38,34 +38,34 @@ export function SignUp() {
         setErrorMessage('Digite um e-mail válido');
       }
     }
-  }
+  };
 
   return (
     <KeyboardAvoidingViewWrapper>
-    <View style={styles.container}>
-      <InputEmail onChangeText={setEmail} />
-      <InputPassword onChangeText={setPassword} errorMessage={errorMessage} />
+      <View style={styles.container}>
+        <InputEmail onChangeText={setEmail} />
+        <InputPassword onChangeText={setPassword} errorMessage={errorMessage} />
 
-      <ButtonSign
-        type="signup"
-        disabled={!email || !password}
-        onPress={handleCreateUserAccount}
-      />
+        <ButtonSign
+          type="signup"
+          disabled={!email || !password}
+          onPress={handleCreateUserAccount}
+        />
 
-      <SmallText text="ou" />
+        <SmallText text="ou" />
 
-      <ButtonNavigation type="signup" />
-    </View>
+        <ButtonNavigation type="signup" />
+      </View>
     </KeyboardAvoidingViewWrapper>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 16,
     alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: colors.white,
-  }
+    flex: 1,
+    justifyContent: 'center',
+    padding: 16,
+  },
 });

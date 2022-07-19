@@ -8,7 +8,7 @@ import { useAuth } from '../contexts/AuthContext';
 
 export function Navigation() {
   const { user } = useAuth();
-  
+
   function getNavigation() {
     if (!user.uid) {
       return <PublicNavigation />;
@@ -16,9 +16,5 @@ export function Navigation() {
     return <PrivateNavigation />;
   }
 
-  return (
-    <NavigationContainer>
-      {getNavigation()}
-    </NavigationContainer>
-  );
+  return <NavigationContainer>{getNavigation()}</NavigationContainer>;
 }

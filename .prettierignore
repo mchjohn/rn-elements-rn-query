@@ -1,0 +1,7 @@
+coverage
+android
+ios
+node_modules
+.expo
+.vscode
+build
