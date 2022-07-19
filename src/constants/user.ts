@@ -1,7 +1,7 @@
 import { ISurvey } from './survey';
 
 export interface IUser {
-  uid: string
+  uid: string;
   email: string;
   surveys?: ISurvey[];
   amountSurvey?: number;

@@ -6,14 +6,16 @@ import { SignUp } from '../screens/SignUp';
 
 import { PropsNavigationStack } from './Models';
 
+import { colors } from '../styles';
+
 const { Navigator, Screen } = createNativeStackNavigator<PropsNavigationStack>();
 
 export function PublicNavigation() {
   return (
     <Navigator
-      initialRouteName='SignIn'
+      initialRouteName="SignIn"
       screenOptions={{
-        contentStyle: {backgroundColor: '#FFFAFA'}
+        contentStyle: { backgroundColor: colors.white },
       }}
     >
       <Screen name="SignIn" component={SignIn} options={{ headerShown: false }} />

@@ -1,39 +1,36 @@
-import React from "react";
-import { Text, Pressable, StyleSheet } from "react-native";
+import React from 'react';
+import { Text, Pressable, StyleSheet } from 'react-native';
 
 import { colors } from '../../styles';
 
 export function FloatButton({ ...rest }) {
   return (
-    <Pressable
-      style={styles.button}
-      {...rest}
-      >
+    <Pressable style={styles.button} {...rest}>
       <Text style={styles.label}>+</Text>
     </Pressable>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   button: {
-    width: 50,
-    height: 50,
+    alignItems: 'center',
+    backgroundColor: colors.blue,
 
-    right: 0,
-    bottom: 0,
     borderRadius: 25,
-    marginRight: 16,
+    bottom: 0,
+    height: 50,
+    justifyContent: 'center',
     marginBottom: 32,
 
+    marginRight: 16,
     position: 'absolute',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.blue,
+    right: 0,
+    width: 50,
   },
   label: {
-    fontSize: 42,
-    lineHeight: 50,
-    fontWeight: "600",
     color: colors.white,
-  }
-})
+    fontSize: 42,
+    fontWeight: '600',
+    lineHeight: 50,
+  },
+});

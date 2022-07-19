@@ -1,8 +1,8 @@
-import React from "react";
-import { Input, Icon } from "@rneui/themed";
-import { TextInputProps } from "react-native";
+import React from 'react';
+import { Input, Icon } from '@rneui/themed';
+import { TextInputProps } from 'react-native';
 
-import { colors } from "../../styles";
+import { colors } from '../../styles';
 
 type Props = TextInputProps & {
   errorMessage: string;
@@ -11,22 +11,16 @@ type Props = TextInputProps & {
 export function InputPassword({ errorMessage, ...rest }: Props) {
   return (
     <Input
-      label='Digite sua senha'
-      placeholder="Sua senha"
+      autoCorrect={false}
+      autoCapitalize="none"
+      label="Digite sua senha"
       secureTextEntry={true}
+      placeholder="Sua senha"
       errorMessage={errorMessage}
-      errorStyle={{ color: '#FF4500'}}
-      leftIcon={
-        <Icon
-          size={24}
-          name='lock'
-          color={colors.gray400}
-        />
-      }
+      errorStyle={{ color: colors.error }}
       labelStyle={{ color: colors.gray300 }}
       inputStyle={{ color: colors.gray400 }}
-      autoCapitalize='none'
-      autoCorrect={false}
+      leftIcon={<Icon size={24} name="lock" color={colors.gray400} />}
       {...rest}
     />
   );
