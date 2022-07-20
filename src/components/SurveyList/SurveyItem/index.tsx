@@ -1,9 +1,12 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { ListItem, CheckBox } from '@rneui/themed';
+import { ListItem } from '@rneui/themed';
 import firestore from '@react-native-firebase/firestore';
 
 import { ISurvey } from '../../../constants/survey';
+
+import { ProgressBar } from '../../ProgressBar';
+import { CheckBoxComp } from '../../CheckBoxComp';
 
 import { colors, fontSize } from '../../../styles';
 
@@ -34,34 +37,59 @@ export function SurveyItem({ survey }: Props) {
     firestore().collection('Surveys').doc(survey.id).update(updatedData);
   };
 
+  // Calcula o valor para progressBar
+  const progressValue1 = () => {
+    if (survey.amountVotes > 0) {
+      const percentageOp1 = survey.amountOp1 / survey.amountVotes;
+
+      return percentageOp1;
+    } else {
+      return 0;
+    }
+  };
+
+  // Calcula o valor para progressBar
+  const progressValue2 = () => {
+    if (survey.amountVotes > 0) {
+      const percentageOp2 = survey.amountOp2 / survey.amountVotes;
+
+      return percentageOp2;
+    } else {
+      return 0;
+    }
+  };
+
   return (
     <ListItem
       bottomDivider
-      containerStyle={{ paddingTop: 8, paddingBottom: 0, paddingHorizontal: 0 }}
+      containerStyle={{ paddingTop: 8, paddingBottom: 16, paddingHorizontal: 0 }}
     >
       <ListItem.Content>
         <ListItem.Title style={styles.text}>{survey.title}</ListItem.Title>
         <ListItem.Subtitle>De: {survey.owner}</ListItem.Subtitle>
-        <ListItem.Subtitle>
-          Opção 1: {survey.amountOp1} votos / Opção 2: {survey.amountOp2} votos / Total:{' '}
-          {survey.amountVotes} votos
-        </ListItem.Subtitle>
 
-        <CheckBox
-          center
+        <CheckBoxComp
           title={survey.op1Title}
-          onPress={() => onVote('op1')}
-          checked={survey.op1}
+          option={survey.op1}
           disabled={survey.op1 || survey.op2}
-          wrapperStyle={{ marginBottom: -20 }}
+          onVote={() => onVote('op1')}
+        />
+        <ProgressBar
+          amountOp={survey.amountOp1}
+          progressValue={progressValue1()}
+          amountVotes={survey.amountVotes}
         />
 
-        <CheckBox
-          center
+        <CheckBoxComp
           title={survey.op2Title}
-          onPress={() => onVote('op2')}
-          checked={survey.op2}
+          option={survey.op2}
           disabled={survey.op2 || survey.op1}
+          onVote={() => onVote('op2')}
+        />
+        <ProgressBar
+          amountOp={survey.amountOp2}
+          progressValue={progressValue2()}
+          amountVotes={survey.amountVotes}
         />
       </ListItem.Content>
       <ListItem.Chevron />
